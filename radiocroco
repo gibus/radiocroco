@@ -26,7 +26,7 @@ unless (defined $stream_url) {
   die "Error in source !$src!\n";
 }
 
-print "Streaming from $stream_url\;":
+print "Streaming from $stream_url\n";
 
 #mplayer rtsp://edge02.mixlr.com:554/live/production/38a65609a1942b9cc3a132b8e23d2b8b
 #exec('mplayer', 'rtsp://edge02.mixlr.com:554/live/production/d9f905fc060c9e54597e1c6734a8a1e2');
