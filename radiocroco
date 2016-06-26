@@ -1,0 +1,31 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use LWP::UserAgent;
+use JSON;
+
+my $ua = LWP::UserAgent->new(env_proxy => 1);
+my $src_req = $ua->get('http://api.mixlr.com/users/radiocroco?source=embed&callback=onUserLoad');
+unless ($src_req->is_success or $src_req->is_redirect) {
+  die "Error in fetch source request: !" . $src_req->message . "! code=!" . $src_req->code . "!\n";
+}
+
+(my $src_json) = $src_req->content =~ /onUserLoad\(([^\)]+)\);/o;
+unless (defined $src_json) {
+  die "Error in source content: !" . $src_req->content . "!\n";
+}
+
+my $src = decode_json($src_json);
+unless (defined $src) {
+  die "Error in source json !$src_json!\n";
+}
+
+my $stream_url = $src->{broadcasts}->[0]->{streams}->{rtsp}->{url};
+unless (defined $stream_url) {
+  die "Error in source !$src!\n";
+}
+
+#mplayer rtsp://edge02.mixlr.com:554/live/production/38a65609a1942b9cc3a132b8e23d2b8b
+#exec('mplayer', 'rtsp://edge02.mixlr.com:554/live/production/d9f905fc060c9e54597e1c6734a8a1e2');
+exec('mplayer', $stream_url);
