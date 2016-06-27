@@ -47,7 +47,7 @@ sub new {
     -1,
     "Radio Croco\nStream from $self->{stream_url}\n",
     wxDefaultPosition,
-    [600, 60],
+    [640, 60],
     wxTE_DONTWRAP|wxTE_MULTILINE|wxTE_READONLY,
   );
   $self->{topsizer}->Add(
