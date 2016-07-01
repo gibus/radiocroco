@@ -36,8 +36,9 @@ unless (defined $stream_url) {
 
 # Create the main pipeline and GUI elements
 my $pipeline = GStreamer::Pipeline->new('pipeline');
-my $player = GStreamer::ElementFactory->make(playbin => 'player');
+my ($player, $goom) = GStreamer::ElementFactory->make(playbin => 'player', 'goom' => 'goom');
 $pipeline->add($player);
+$player->set('vis-plugin', $goom);
 
 # Create the widgets
 my $window = Gtk2::Window->new('toplevel');
