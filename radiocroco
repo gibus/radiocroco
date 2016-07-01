@@ -68,11 +68,13 @@ $window->show_all();
 
 $player->set(uri => $stream_url);
 
+# Play at start
+$pipeline->set_state('playing');
 # Store status (play=1/stop=0)
-my $play_stop_status = 0;
+my $play_stop_status = 1;
 
 # Play/Stop button
-my $play_stop_button = Gtk2::Button->new('Play');
+my $play_stop_button = Gtk2::Button->new('Stop');
 
 # Play/Stop handler
 sub play_stop {
