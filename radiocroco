@@ -11,6 +11,7 @@ use GStreamer::Interfaces;
 use Gtk2 '-init';
 use File::Spec;
 use Cwd;
+use Data::Dumper;
 
 # Fetch mixlr radiocroco page
 my $ua = LWP::UserAgent->new(env_proxy => 1);
@@ -30,7 +31,7 @@ unless (defined $src) {
 }
 my $stream_url = $src->{broadcasts}->[0]->{streams}->{rtsp}->{url};
 unless (defined $stream_url) {
-  die "Error in source !$src!\n";
+  die "Error in source !" . Dumper($src) . "!\n";
 }
 
 # Create the main pipeline and GUI elements
