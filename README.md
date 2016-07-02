@@ -5,10 +5,10 @@ No need to launch browser on Mixlr website to simply listen to Radio Croco, just
 
 The GUI version comes in two flavours: default one is built on Gtk2, 'radiocroco-wx' uses wxWidgets. Both are supposed to run on major operating systems, but only have only been tested on GNU/Linux. Choose the flavour best adapted to your system... and  to your taste.
 
+Since July, 1st, 2016, broadcast from https://radiocroco.info (instead of mixlr).
+
 Dependencies (for both GUI and console versions):
 * perl
-* libwww-perl
-* libjson-perl
 
 Dependencies for Gtk2 GUI version
 * libglib-perl

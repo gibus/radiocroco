@@ -3,8 +3,6 @@
 use strict;
 use warnings;
 
-use LWP::UserAgent;
-use JSON;
 use Glib qw(TRUE FALSE filename_to_uri);
 use GStreamer '-init';
 use GStreamer::Interfaces;
