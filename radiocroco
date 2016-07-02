@@ -7,16 +7,13 @@ use Glib qw(TRUE FALSE filename_to_uri);
 use GStreamer '-init';
 use GStreamer::Interfaces;
 use Gtk2 '-init';
-use File::Spec;
-use Cwd;
-use Data::Dumper;
 
 # Stream url from radiocroco.info
 my $stream_url = 'https://radiocroco.info/streaming/radiocroco_64.mp3';
 
 # Create the main pipeline and GUI elements
 my $pipeline = GStreamer::Pipeline->new('pipeline');
-my ($player, $goom) = GStreamer::ElementFactory->make(playbin => 'player', 'goom' => 'goom');
+my ($player, $goom) = GStreamer::ElementFactory->make(playbin => 'player', 'goom2k1' => 'goom');
 $pipeline->add($player);
 $player->set('vis-plugin', $goom);
 
