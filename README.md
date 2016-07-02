@@ -9,17 +9,14 @@ Since July, 1st, 2016, broadcast from https://radiocroco.info (instead of mixlr)
 
 Dependencies (for both GUI and console versions):
 * perl
+* gstreamer-tools
+* gstreamer0.10-plugins-good
 
 Dependencies for Gtk2 GUI version
 * libglib-perl
 * libgstreamer-perl
+* libgstreamer-interfaces-perl
 * libgtk2-perl
-* gstreamer0.10-plugins-good
 
 Dependencies for wxWidgets GUI version
 * libwx-perl
-* gstreamer0.10-plugins-good
-* gstreamer-tools
-
-Dependencies for console version
-* mplayer2
