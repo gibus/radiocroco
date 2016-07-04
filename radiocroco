@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Glib qw(TRUE FALSE filename_to_uri);
+use Glib qw(TRUE FALSE);
 use GStreamer '-init';
 use GStreamer::Interfaces;
 use Gtk2 '-init';
@@ -41,20 +41,37 @@ my $buttons = Gtk2::HButtonBox->new();
 $vbox->pack_start($buttons, FALSE, TRUE, 0);
 
 $window->add($vbox);
-
-$window->signal_connect(delete_event => sub {Gtk2->main_quit(); return Glib::SOURCE_CONTINUE;});
-
+$window->signal_connect(delete_event => sub {exit});
 $window->show_all();
 
+# Set player source to stream URI
 $player->set(uri => $stream_url);
-
-# Play at start
-$pipeline->set_state('playing');
-# Store status (play=1/stop=0)
-my $play_stop_status = 1;
 
 # Play/Stop button
 my $play_stop_button = Gtk2::Button->new('Stop');
+
+$play_stop_button->signal_connect(clicked => \&play_stop);
+$buttons->add($play_stop_button);
+$play_stop_button->show_all();
+
+# Exit button
+my $exit_button = Gtk2::Button->new('Exit');
+$exit_button->signal_connect(clicked => sub {Gtk2->main_quit(); return Glib::SOURCE_CONTINUE;});
+$buttons->add($exit_button);
+$exit_button->show_all();
+
+# Play stream
+$player->set(mute => FALSE);
+$pipeline->set_state('playing');
+
+# Store status (play=1/stop=0)
+my $play_stop_status = 1;
+
+# Run the program
+$loop->run();
+
+# Cleanup
+$pipeline->set_state('null');
 
 # Play/Stop handler
 sub play_stop {
@@ -72,19 +89,3 @@ sub play_stop {
     $play_stop_button->set_label('Play');
   }
 }
-
-$play_stop_button->signal_connect(clicked => \&play_stop);
-$buttons->add($play_stop_button);
-$play_stop_button->show_all();
-
-# Exit button
-my $exit_button = Gtk2::Button->new('Exit');
-$exit_button->signal_connect(clicked => sub {Gtk2->main_quit(); return Glib::SOURCE_CONTINUE;});
-$buttons->add($exit_button);
-$exit_button->show_all();
-
-# Run the program
-Gtk2->main();
-
-# Cleanup
-$pipeline->set_state('null');
