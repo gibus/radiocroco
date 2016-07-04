@@ -13,7 +13,7 @@ use Data::Dumper;
 my $stream_url = 'https://radiocroco.info/streaming/radiocroco_64.mp3';
 
 # Create the main loop and pipeline
-my $loop = Glib::MainLoop->new();
+my $loop = Glib::MainLoop->new(undef, FALSE);
 my $pipeline = GStreamer::Pipeline->new('pipeline');
 my ($player, $vis) = GStreamer::ElementFactory->make('playbin2' => 'player', 'goom2k1' => 'goom');
 $player->set('vis-plugin', $vis);
@@ -45,7 +45,7 @@ my $buttons = Gtk2::HButtonBox->new();
 $vbox->pack_start($buttons, FALSE, TRUE, 0);
 
 $window->add($vbox);
-$window->signal_connect(delete_event => sub {exit});
+$window->signal_connect(delete_event => sub {$pipeline->set_state('null'); exit;});
 $window->show_all();
 
 # Set player source to stream URI
@@ -60,13 +60,12 @@ $play_stop_button->show_all();
 
 # Exit button
 my $exit_button = Gtk2::Button->new('Exit');
-$exit_button->signal_connect(clicked => sub {exit;});
+$exit_button->signal_connect(clicked => sub {$pipeline->set_state('null'); exit;});
 $buttons->add($exit_button);
 $exit_button->show_all();
 
-# Set handler to detect when visualization sink is created
-my $playsink = $player->get_by_name('playsink1');
-$playsink->signal_connect('element-added' => \&playsink_new_elt);
+# Set bus callback to detect when visualization sink is created
+$pipeline->get_bus()->add_watch(\&my_bus_callback, $loop);
 
 # Play stream
 $pipeline->set_state('playing');
@@ -97,13 +96,16 @@ sub play_stop {
   }
 }
 
-# Handler to detect when visualization sink is created
-sub playsink_new_elt {
-  my ($bin, $elt) = @_;
+# Bus callback
+sub my_bus_callback {
+  my ($bus, $message, $loop) = @_;
 
-  if ($elt->get_name() eq 'vbin') {
-    # Redirect visualization sink to canvas
-    my $vis_sink = $elt->get_by_name('videosink-actual-sink-xvimage');
-    $vis_sink->set_xwindow_id($canvas->window->get_xid);
+  my $struct = $message->get_structure;
+  if ($struct && $struct->{name} eq 'playbin2-stream-changed') {
+    my $vis_sink = $pipeline->get_by_name('videosink-actual-sink-xvimage');
+    if ($vis_sink) {
+      $vis_sink->set_xwindow_id($canvas->window->get_xid);
+    }
   }
+  return TRUE;
 }
