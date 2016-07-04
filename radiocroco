@@ -12,7 +12,8 @@ use Data::Dumper;
 # Stream url from radiocroco.info
 my $stream_url = 'https://radiocroco.info/streaming/radiocroco_64.mp3';
 
-# Create the main pipeline and GUI elements
+# Create the main loop and pipeline
+my $loop = Glib::MainLoop->new();
 my $pipeline = GStreamer::Pipeline->new('pipeline');
 my ($player, $goom) = GStreamer::ElementFactory->make('playbin2' => 'player', 'goom2k1' => 'goom');
 $player->set('vis-plugin', $goom);
