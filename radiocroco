@@ -57,7 +57,7 @@ $play_stop_button->show_all();
 
 # Exit button
 my $exit_button = Gtk2::Button->new('Exit');
-$exit_button->signal_connect(clicked => sub {Gtk2->main_quit(); return Glib::SOURCE_CONTINUE;});
+$exit_button->signal_connect(clicked => sub {exit;});
 $buttons->add($exit_button);
 $exit_button->show_all();
 
