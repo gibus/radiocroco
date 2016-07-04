@@ -32,13 +32,12 @@ $vbox->pack_start($label, FALSE, FALSE, 0);
 # Add canvas for vizualization plugin
 my $canvas = Gtk2::DrawingArea->new();
 $canvas->set_size_request(320, 240);
-$vbox->pack_start($canvas, TRUE, TRUE, 0);
+$vbox->pack_start($canvas, FALSE, TRUE, 10);
 
 # Add stream url as text entry
 my $text = Gtk2::Entry->new();
-$text->set_text("Stream from $stream_url");
+$text->set_text($stream_url);
 $text->set_editable(FALSE);
-$text->set_width_chars(length($stream_url) + 12);
 $vbox->pack_start($text, FALSE, FALSE, 0);
 
 # Playback controls
