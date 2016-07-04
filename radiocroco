@@ -15,20 +15,24 @@ my $stream_url = 'https://radiocroco.info/streaming/radiocroco_64.mp3';
 # Create the main loop and pipeline
 my $loop = Glib::MainLoop->new();
 my $pipeline = GStreamer::Pipeline->new('pipeline');
-my ($player, $goom) = GStreamer::ElementFactory->make('playbin2' => 'player', 'goom2k1' => 'goom');
-$player->set('vis-plugin', $goom);
+my ($player, $vis) = GStreamer::ElementFactory->make('playbin2' => 'player', 'goom2k1' => 'goom');
+$player->set('vis-plugin', $vis);
 $player->set('flags', ['video', 'audio', 'text', 'soft-volume', 'vis', 'buffering']);
 $pipeline->add($player);
 
 # Create the widgets
 my $window = Gtk2::Window->new('toplevel');
 $window->set_title("Radio Croco");
-
 my $vbox = Gtk2::VBox->new(FALSE, 10);
 
 # Add a label
 my $label = Gtk2::Label->new("Radio Croco");
 $vbox->pack_start($label, FALSE, FALSE, 0);
+
+# Add canvas for vizualization plugin
+my $canvas = Gtk2::DrawingArea->new();
+$canvas->set_size_request(320, 240);
+$vbox->pack_start($canvas, TRUE, TRUE, 0);
 
 # Add stream url as text entry
 my $text = Gtk2::Entry->new();
@@ -37,7 +41,7 @@ $text->set_editable(FALSE);
 $text->set_width_chars(length($stream_url) + 12);
 $vbox->pack_start($text, FALSE, FALSE, 0);
 
-# Prepare a box that will hold the playback controls
+# Playback controls
 my $buttons = Gtk2::HButtonBox->new();
 $vbox->pack_start($buttons, FALSE, TRUE, 0);
 
@@ -61,8 +65,11 @@ $exit_button->signal_connect(clicked => sub {exit;});
 $buttons->add($exit_button);
 $exit_button->show_all();
 
+# Set handler to detect when visualization sink is created
+my $playsink = $player->get_by_name('playsink1');
+$playsink->signal_connect('element-added' => \&playsink_new_elt);
+
 # Play stream
-$player->set(mute => FALSE);
 $pipeline->set_state('playing');
 
 # Store status (play=1/stop=0)
@@ -88,5 +95,16 @@ sub play_stop {
   else {
     $pipeline->set_state('ready');
     $play_stop_button->set_label('Play');
+  }
+}
+
+# Handler to detect when visualization sink is created
+sub playsink_new_elt {
+  my ($bin, $elt) = @_;
+
+  if ($elt->get_name() eq 'vbin') {
+    # Redirect visualization sink to canvas
+    my $vis_sink = $elt->get_by_name('videosink-actual-sink-xvimage');
+    $vis_sink->set_xwindow_id($canvas->window->get_xid);
   }
 }
