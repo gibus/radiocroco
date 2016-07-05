@@ -35,6 +35,10 @@ my $canvas = Gtk2::DrawingArea->new();
 $canvas->set_size_request(320, 240);
 $vbox->pack_start($canvas, FALSE, TRUE, 10);
 
+# Add a status label
+my $status = Gtk2::Label->new("Connecting to stream...");
+$vbox->pack_start($status, FALSE, FALSE, 0);
+
 # Add stream url as text entry
 my $text = Gtk2::Entry->new();
 $text->set_text($stream_url);
@@ -88,11 +92,13 @@ sub play_stop {
   # Play
   if ($play_stop_status) {
     $pipeline->set_state('playing');
+    $status->set_label('Connecting to stream...');
     $play_stop_button->set_label('Stop');
   }
   # Stop
   else {
     $pipeline->set_state('ready');
+    $status->set_label('Stopped');
     $play_stop_button->set_label('Play');
   }
 }
@@ -107,6 +113,7 @@ sub bus_callback {
     if ($vis_sink) {
       $vis_sink->set_xwindow_id($canvas->window->get_xid);
     }
+    $status->set_label('Playing');
   }
   return TRUE;
 }
