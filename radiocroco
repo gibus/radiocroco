@@ -30,7 +30,7 @@ my $label = Gtk2::Label->new("Radio Croco");
 $vbox->pack_start($label, FALSE, FALSE, 0);
 
 # Add canvas for vizualization plugin
-my $canvas = Gtk2::DrawingArea->new();
+my $canvas = Gtk2::DrawingArea->new;
 $canvas->set_size_request(320, 240);
 $vbox->pack_start($canvas, FALSE, TRUE, 10);
 
@@ -39,18 +39,18 @@ my $status = Gtk2::Label->new("Connecting to stream...");
 $vbox->pack_start($status, FALSE, FALSE, 0);
 
 # Add stream url as text entry
-my $text = Gtk2::Entry->new();
+my $text = Gtk2::Entry->new;
 $text->set_text($stream_url);
 $text->set_editable(FALSE);
 $vbox->pack_start($text, FALSE, FALSE, 0);
 
 # Playback controls
-my $buttons = Gtk2::HButtonBox->new();
+my $buttons = Gtk2::HButtonBox->new;
 $vbox->pack_start($buttons, FALSE, TRUE, 0);
 
 $window->add($vbox);
 $window->signal_connect(delete_event => sub {$pipeline->set_state('null'); exit;});
-$window->show_all();
+$window->show_all;
 
 # Set player source to stream URI
 $player->set(uri => $stream_url);
@@ -60,16 +60,16 @@ my $play_stop_button = Gtk2::Button->new('Stop');
 
 $play_stop_button->signal_connect(clicked => \&play_stop);
 $buttons->add($play_stop_button);
-$play_stop_button->show_all();
+$play_stop_button->show_all;
 
 # Exit button
 my $exit_button = Gtk2::Button->new('Exit');
 $exit_button->signal_connect(clicked => sub {$pipeline->set_state('null'); exit;});
 $buttons->add($exit_button);
-$exit_button->show_all();
+$exit_button->show_all;
 
 # Set bus callback to detect when visualization sink is created
-$pipeline->get_bus()->add_watch(\&bus_callback, $loop);
+$pipeline->get_bus->add_watch(\&bus_callback, $loop);
 
 # Play stream
 $pipeline->set_state('playing');
@@ -78,7 +78,7 @@ $pipeline->set_state('playing');
 my $play_stop_status = 1;
 
 # Run the program
-$loop->run();
+$loop->run;
 
 # Cleanup
 $pipeline->set_state('null');
