@@ -65,7 +65,7 @@ $buttons->add($exit_button);
 $exit_button->show_all();
 
 # Set bus callback to detect when visualization sink is created
-$pipeline->get_bus()->add_watch(\&my_bus_callback, $loop);
+$pipeline->get_bus()->add_watch(\&bus_callback, $loop);
 
 # Play stream
 $pipeline->set_state('playing');
@@ -97,7 +97,7 @@ sub play_stop {
 }
 
 # Bus callback
-sub my_bus_callback {
+sub bus_callback {
   my ($bus, $message, $loop) = @_;
 
   my $struct = $message->get_structure;
