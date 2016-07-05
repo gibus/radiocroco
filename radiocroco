@@ -93,12 +93,16 @@ sub play_stop {
     $pipeline->set_state('playing');
     $status->set_label('Connecting to stream...');
     $play_stop_button->set_label('Stop');
+    # Dirty hack if window was previously resized
+    $window->resize(320, 408);
   }
   # Stop
   else {
     $pipeline->set_state('ready');
     $status->set_label('Stopped');
     $play_stop_button->set_label('Play');
+    # Dirty hack to clear window
+    $window->resize(321, 408);
   }
 }
 
