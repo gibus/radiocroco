@@ -17,7 +17,6 @@ my $loop = Glib::MainLoop->new(undef, FALSE);
 my $pipeline = GStreamer::Pipeline->new('pipeline');
 my ($player, $vis) = GStreamer::ElementFactory->make('playbin2' => 'player', 'goom2k1' => 'goom');
 $player->set('vis-plugin', $vis);
-$player->set('async-handling', TRUE);
 $player->set('flags', ['video', 'audio', 'text', 'soft-volume', 'vis', 'download', 'buffering']);
 $pipeline->add($player);
 
