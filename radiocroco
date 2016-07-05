@@ -27,12 +27,12 @@ my $vbox = Gtk2::VBox->new(FALSE, 10);
 
 # Add a label
 my $label = Gtk2::Label->new("Radio Croco");
-$vbox->pack_start($label, FALSE, FALSE, 0);
+$vbox->pack_start($label, FALSE, FALSE, 10);
 
 # Add canvas for vizualization plugin
 my $canvas = Gtk2::DrawingArea->new;
 $canvas->set_size_request(320, 240);
-$vbox->pack_start($canvas, FALSE, TRUE, 10);
+$vbox->pack_start($canvas, TRUE, TRUE, 10);
 
 # Add a status label
 my $status = Gtk2::Label->new("Connecting to stream...");
