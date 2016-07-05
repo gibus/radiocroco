@@ -15,11 +15,9 @@ my $stream_url = 'https://radiocroco.info/streaming/radiocroco_64.mp3';
 
 # Create the main loop and pipeline
 my $loop = Glib::MainLoop->new(undef, FALSE);
-my $pipeline = GStreamer::Pipeline->new('pipeline');
 my ($player, $vis) = GStreamer::ElementFactory->make('playbin2' => 'player', 'goom2k1' => 'goom');
 $player->set('vis-plugin', $vis);
 $player->set('flags', ['video', 'audio', 'text', 'soft-volume', 'vis', 'download', 'buffering']);
-$pipeline->add($player);
 
 # Create the widgets
 my $window = Gtk2::Window->new('toplevel');
@@ -52,7 +50,7 @@ my $buttons = Gtk2::HButtonBox->new;
 $vbox->pack_start($buttons, FALSE, TRUE, 0);
 
 $window->add($vbox);
-$window->signal_connect(delete_event => sub {$pipeline->set_state('null'); exit;});
+$window->signal_connect(delete_event => sub {$player->set_state('null'); exit;});
 $window->show_all;
 
 # Set player source to stream URI
@@ -67,15 +65,15 @@ $play_stop_button->show_all;
 
 # Exit button
 my $exit_button = Gtk2::Button->new('Exit');
-$exit_button->signal_connect(clicked => sub {$pipeline->set_state('null'); exit;});
+$exit_button->signal_connect(clicked => sub {$player->set_state('null'); exit;});
 $buttons->add($exit_button);
 $exit_button->show_all;
 
 # Set bus callback to detect when visualization sink is created
-$pipeline->get_bus->add_watch(\&bus_callback, $loop);
+$player->get_bus->add_watch(\&bus_callback, $loop);
 
 # Play stream
-$pipeline->set_state('playing');
+$player->set_state('playing');
 
 # Store status (play=1/stop=0)
 my $play_stop_status = 1;
@@ -84,7 +82,7 @@ my $play_stop_status = 1;
 $loop->run;
 
 # Cleanup
-$pipeline->set_state('null');
+$player->set_state('null');
 
 # Play/Stop handler
 sub play_stop {
@@ -93,7 +91,7 @@ sub play_stop {
 
   # Play
   if ($play_stop_status) {
-    $pipeline->set_state('playing');
+    $player->set_state('playing');
     $status->set_label('Connecting to stream...');
     $play_stop_button->set_label('Stop');
     # Dirty hack if window was previously resized
@@ -101,7 +99,7 @@ sub play_stop {
   }
   # Stop
   else {
-    $pipeline->set_state('ready');
+    $player->set_state('ready');
     $status->set_label('Stopped');
     $play_stop_button->set_label('Play');
     # Dirty hack to clear window
@@ -115,7 +113,7 @@ sub bus_callback {
 
   my $struct = $message->get_structure;
   if ($struct && $struct->{name} eq 'playbin2-stream-changed') {
-    my $vis_sink = $pipeline->get_by_name('videosink-actual-sink-xvimage');
+    my $vis_sink = $player->get_by_name('videosink-actual-sink-xvimage');
     if ($vis_sink) {
       $vis_sink->set_xwindow_id($canvas->window->get_xid);
     }
