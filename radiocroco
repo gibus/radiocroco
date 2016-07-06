@@ -23,7 +23,6 @@ $player->set('flags', ['video', 'audio', 'text', 'soft-volume', 'vis', 'download
 my $window = Gtk2::Window->new('toplevel');
 $window->set_title("Radio Croco");
 $window->set_icon_from_file("$RealBin/radiocroco.png");
-$window->set_icon_name('radiocroco');
 my $vbox = Gtk2::VBox->new(FALSE, 10);
 
 # Add a label
