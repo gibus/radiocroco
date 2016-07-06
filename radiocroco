@@ -31,7 +31,7 @@ $vbox->pack_start($label, FALSE, FALSE, 10);
 
 # Add canvas for vizualization plugin
 my $canvas = Gtk2::DrawingArea->new;
-$canvas->set_size_request(320, 240);
+$canvas->size(320, 240);
 $vbox->pack_start($canvas, TRUE, TRUE, 10);
 
 # Add a status label
@@ -52,12 +52,22 @@ $window->add($vbox);
 $window->signal_connect(delete_event => sub {$player->set_state('null'); exit;});
 $window->show_all;
 
+my $pixbuf = Gtk2::Gdk::Pixbuf->new_from_file("$RealBin/radiocroco.png");
+$canvas->signal_connect (expose_event => \&canvas_expose);
+my $gc = Gtk2::Gdk::GC->new($canvas->get_window);
+sub canvas_expose {
+  my $area = shift;
+  my $event = shift;
+  if ($status->get_label ne 'Playing') {
+    $area->get_window->draw_pixbuf($gc, $pixbuf, 0, 0, (($event->area->width - $pixbuf->get_width) / 2), (($event->area->height - $pixbuf->get_height) / 2), -1, -1, 'none', 0, 0);
+  }
+}
+
 # Set player source to stream URI
 $player->set(uri => $stream_url);
 
 # Play/Stop button
 my $play_stop_button = Gtk2::Button->new('Stop');
-
 $play_stop_button->signal_connect(clicked => \&play_stop);
 $buttons->add($play_stop_button);
 $play_stop_button->show_all;
