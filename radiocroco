@@ -64,6 +64,7 @@ sub play_stop {
     $status->set_label('Stopped');
     $play_stop_button->set_label('Play');
     # Dirty hack to clear window
+    $window->unmaximize;
     $window->resize(321, 408);
   }
 }
