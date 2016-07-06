@@ -81,7 +81,7 @@ sub canvas_expose {
 
 # Create the main loop and pipeline
 my $loop = Glib::MainLoop->new(undef, FALSE);
-($player, $vis) = GStreamer::ElementFactory->make('playbin2' => 'player', 'goom2k1' => 'goom');
+($player, $vis) = GStreamer::ElementFactory->make('playbin2' => 'player', 'goom2k1' => 'vis');
 $player->set('vis-plugin', $vis);
 $player->set('flags', ['video', 'audio', 'text', 'soft-volume', 'vis', 'download', 'buffering']);
 
