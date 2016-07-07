@@ -5,7 +5,7 @@ No need to launch a browser to simply listen to Radio Croco, just launch 'radioc
 
 Since July, 1st, 2016, broadcast from https://radiocroco.info (instead of mixlr).
 
-Dependencies (for both GUI and console versions):
+Dependencies:
 * perl
 * gstreamer-tools
 * gstreamer0.10-plugins-good
