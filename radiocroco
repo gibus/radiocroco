@@ -4,14 +4,50 @@ use strict;
 use warnings;
 
 use Glib qw(TRUE FALSE);
-use GStreamer '-init';
-use GStreamer::Interfaces;
 use Gtk2 '-init';
 use Data::Dumper;
 use FindBin qw($RealBin);
 
+# Use Glib::Object::Introspection
+# since GStreamer1.0 has no perl binding
+use Glib::Object::Introspection;
+BEGIN {
+  foreach my $name ('', (
+      #'Allocators',
+      'App',
+      #'Audio',
+      'Base',
+      #'Check',
+      'Controller',
+      #'Fft',
+      #'InsertBin',
+      #'Mpegts',
+      #'Net',
+      #'Pbutils',
+      #'Riff',
+      #'Rtp',
+      #'Rtsp',
+      #'Sdp',
+      #'Tag',
+      'Video',
+    )) {
+    my $basename = 'Gst' . $name;
+    my $pkg      = $name
+    ? 'GStreamerCroco' . $name
+    : 'GStreamerCroco';
+    Glib::Object::Introspection->setup(
+      basename => $basename,
+      version  => '1.0',
+      package  => $pkg,
+    );
+  }
+}
+GStreamerCroco::init([ $0, @ARGV ]);
+
 # Global variables
-my $stream_url = 'https://radiocroco.info/streaming/radiocroco_64.mp3'; # Stream url from radiocroco.info
+#my $stream_url = 'https://radiocroco.info/streaming/radiocroco_64.mp3'; # Stream url from radiocroco.info
+my $stream_url = 'http://vdl.stream-lat.org:8000/voixdulat_mp3'; # While radicroco is silent, alternative stream url from asso.libre-a-toi.org
+my $loop; # GTK main loop
 my $window; # GTK top level window
 my $player; # GStreamer playerbin2 pipeline
 my $vis; # GStreamer visualization plugin (goom2k)
@@ -23,7 +59,7 @@ my $pixbuf = Gtk2::Gdk::Pixbuf->new_from_file("$RealBin/radiocroco.png"); # Stat
 
 # Gstreamer bus callback
 sub bus_callback {
-  my ($bus, $message, $loop) = @_;
+  my ($bus, $message) = @_;
 
   if ($message->type & 'eos') {
     $loop -> quit();
@@ -34,10 +70,10 @@ sub bus_callback {
   }
   else {
     my $struct = $message->get_structure;
-    if ($struct && $struct->{name} eq 'playbin2-stream-changed') {
+    if ($struct && $struct->get_name eq 'prepare-window-handle') {
       my $vis_sink = $player->get_by_name('videosink-actual-sink-xvimage');
       if ($vis_sink) {
-        $vis_sink->set_xwindow_id($canvas->window->get_xid);
+        $message->src->set_window_handle($canvas->window->get_xid);
       }
       $status->set_label('Playing');
     }
@@ -80,8 +116,9 @@ sub canvas_expose {
 }
 
 # Create the main loop and pipeline
-my $loop = Glib::MainLoop->new(undef, FALSE);
-($player, $vis) = GStreamer::ElementFactory->make('playbin2' => 'player', 'goom2k1' => 'vis');
+$loop = Glib::MainLoop->new(undef, FALSE);
+$player = GStreamerCroco::ElementFactory::make('playbin' => 'player');
+$vis = GStreamerCroco::ElementFactory::make('goom2k1' => 'vis');
 $player->set('vis-plugin', $vis);
 $player->set('flags', ['video', 'audio', 'text', 'soft-volume', 'vis', 'download', 'buffering']);
 
@@ -138,7 +175,10 @@ $buttons->add($exit_button);
 $exit_button->show_all;
 
 # Set bus callback to detect when visualization sink is created
-$player->get_bus->add_watch(\&bus_callback, $loop);
+$player->get_bus->add_signal_watch;
+$player->get_bus->signal_connect('message::element' => \&bus_callback);
+$player->get_bus->signal_connect('message::eos' => \&bus_callback);
+$player->get_bus->signal_connect('message::error' => \&bus_callback);
 
 # Play stream
 $player->set_state('playing');
