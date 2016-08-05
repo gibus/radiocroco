@@ -11,36 +11,34 @@ use FindBin qw($RealBin);
 # Use Glib::Object::Introspection
 # since GStreamer1.0 has no perl binding
 use Glib::Object::Introspection;
-BEGIN {
-  foreach my $name ('', (
-      #'Allocators',
-      'App',
-      #'Audio',
-      'Base',
-      #'Check',
-      'Controller',
-      #'Fft',
-      #'InsertBin',
-      #'Mpegts',
-      #'Net',
-      #'Pbutils',
-      #'Riff',
-      #'Rtp',
-      #'Rtsp',
-      #'Sdp',
-      #'Tag',
-      'Video',
-    )) {
-    my $basename = 'Gst' . $name;
-    my $pkg      = $name
-    ? 'GStreamerCroco' . $name
-    : 'GStreamerCroco';
-    Glib::Object::Introspection->setup(
-      basename => $basename,
-      version  => '1.0',
-      package  => $pkg,
-    );
-  }
+foreach my $name ('', (
+    #'Allocators',
+    'App',
+    #'Audio',
+    'Base',
+    #'Check',
+    'Controller',
+    #'Fft',
+    #'InsertBin',
+    #'Mpegts',
+    #'Net',
+    #'Pbutils',
+    #'Riff',
+    #'Rtp',
+    #'Rtsp',
+    #'Sdp',
+    #'Tag',
+    'Video',
+  )) {
+  my $basename = 'Gst' . $name;
+  my $pkg      = $name
+  ? 'GStreamerCroco' . $name
+  : 'GStreamerCroco';
+  Glib::Object::Introspection->setup(
+    basename => $basename,
+    version  => '1.0',
+    package  => $pkg,
+  );
 }
 GStreamerCroco::init([ $0, @ARGV ]);
 
