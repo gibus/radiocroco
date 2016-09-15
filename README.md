@@ -1,5 +1,5 @@
 # radiocroco
-Simple GUI to listen to Radio Croco, free radio from Rennes (France), broadcasted on https://radiocroco.info.
+Simple GUI to listen to Radio Croco, free radio from Rennes (France), broadcasted on https://pirenaica.fr
 
 No need to launch a browser to simply listen to Radio Croco, just launch 'radiocroco' to open up a simple dialog window with Play/Stop button and a fancy visualization window displaying psychedelic drawings in reaction to music (based on goom).
 
