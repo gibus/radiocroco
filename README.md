@@ -9,3 +9,4 @@ Dependencies:
 * libglib-perl
 * libgtk2-perl
 * libglib-object-introspection-perl
+* gir1.2-gstreamer-1.0
