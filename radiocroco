@@ -43,7 +43,8 @@ foreach my $name ('', (
 GStreamerCroco::init([ $0, @ARGV ]);
 
 # Global variables
-my $stream_url = 'https://pirenaica.fr/stream.ogg';
+my $stream_url = 'https://radio.antirep.net/RadioKlaxon';
+#my $stream_url = 'https://pirenaica.fr/stream.ogg';
 #my $stream_url = 'https://radiocroco.info/streaming/radiocroco_64.mp3'; # Stream url from radiocroco.info
 #my $stream_url = 'http://vdl.stream-lat.org:8000/voixdulat_mp3'; # While radicroco is silent, alternative stream url from asso.libre-a-toi.org
 my $loop; # GTK main loop
