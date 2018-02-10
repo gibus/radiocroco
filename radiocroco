@@ -7,6 +7,10 @@ use Glib qw(TRUE FALSE);
 use Gtk2 '-init';
 use Data::Dumper;
 use FindBin qw($RealBin);
+use Getopt::Long;
+
+my $noviz = 0;
+GetOptions('noviz|n' => \$noviz);
 
 # Use Glib::Object::Introspection
 # since GStreamer1.0 has no perl binding
@@ -72,7 +76,7 @@ sub bus_callback {
     my $struct = $message->get_structure;
     if ($struct && $struct->get_name eq 'prepare-window-handle') {
       my $vis_sink = $player->get_by_name('videosink-actual-sink-xvimage');
-      if ($vis_sink) {
+      if ($vis_sink && !$noviz) {
         $message->src->set_window_handle($canvas->window->get_xid);
       }
       $status->set_label('Playing');
@@ -89,7 +93,7 @@ sub play_stop {
   # Play
   if ($play_stop_status) {
     $player->set_state('playing');
-    $status->set_label('Connecting to stream...');
+    $status->set_label('Playing');
     $play_stop_button->set_label('Stop');
     # Dirty hack if window was previously resized
     $window->resize(320, 408);
@@ -118,9 +122,13 @@ sub canvas_expose {
 # Create the main loop and pipeline
 $loop = Glib::MainLoop->new(undef, FALSE);
 $player = GStreamerCroco::ElementFactory::make('playbin' => 'player');
-$vis = GStreamerCroco::ElementFactory::make('goom2k1' => 'vis');
-$player->set('vis-plugin', $vis);
-$player->set('flags', ['video', 'audio', 'text', 'soft-volume', 'vis', 'download', 'buffering']);
+unless ($noviz) {
+  $vis = GStreamerCroco::ElementFactory::make('goom2k1' => 'vis');
+  $player->set('vis-plugin', $vis);
+  $player->set('flags', ['video', 'audio', 'text', 'soft-volume', 'vis', 'download', 'buffering']);
+} else {
+  $player->set('flags', ['video', 'audio', 'text', 'soft-volume', 'download', 'buffering']);
+}
 
 # Create container widgets
 $window = Gtk2::Window->new('toplevel');
