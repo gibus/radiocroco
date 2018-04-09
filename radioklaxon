@@ -36,15 +36,15 @@ foreach my $name ('', (
   )) {
   my $basename = 'Gst' . $name;
   my $pkg      = $name
-  ? 'GStreamerCroco' . $name
-  : 'GStreamerCroco';
+  ? 'GStreamerKlaxon' . $name
+  : 'GStreamerKlaxon';
   Glib::Object::Introspection->setup(
     basename => $basename,
     version  => '1.0',
     package  => $pkg,
   );
 }
-GStreamerCroco::init([ $0, @ARGV ]);
+GStreamerKlaxon::init([ $0, @ARGV ]);
 
 # Global variables
 my $stream_url = 'https://radio.antirep.net/RadioKlaxon';
@@ -59,7 +59,7 @@ my $canvas; # Canvas to display music visalization when playing or static image 
 my $status; # Status label widget
 my $play_stop_button; # Togglable button
 my $play_stop_status = 1; # Status of togglable button (play=1/stop=0)
-my $pixbuf = Gtk2::Gdk::Pixbuf->new_from_file("$RealBin/radiocroco.png"); # Static image
+my $pixbuf = Gtk2::Gdk::Pixbuf->new_from_file("$RealBin/radioklaxon.png"); # Static image
 
 # Gstreamer bus callback
 sub bus_callback {
@@ -121,9 +121,9 @@ sub canvas_expose {
 
 # Create the main loop and pipeline
 $loop = Glib::MainLoop->new(undef, FALSE);
-$player = GStreamerCroco::ElementFactory::make('playbin' => 'player');
+$player = GStreamerKlaxon::ElementFactory::make('playbin' => 'player');
 unless ($noviz) {
-  $vis = GStreamerCroco::ElementFactory::make('goom2k1' => 'vis');
+  $vis = GStreamerKlaxon::ElementFactory::make('goom2k1' => 'vis');
   $player->set('vis-plugin', $vis);
   $player->set('flags', ['video', 'audio', 'text', 'soft-volume', 'vis', 'download', 'buffering']);
 } else {
@@ -132,13 +132,13 @@ unless ($noviz) {
 
 # Create container widgets
 $window = Gtk2::Window->new('toplevel');
-$window->set_title("Radio Croco");
+$window->set_title("Radio Klaxon");
 $window->set_icon($pixbuf);
 my $vbox = Gtk2::VBox->new(FALSE, 10);
 my $buttons = Gtk2::HButtonBox->new;
 
 # Add a label
-my $label = Gtk2::Label->new("Radio Croco");
+my $label = Gtk2::Label->new("Radio Klaxon");
 $vbox->pack_start($label, FALSE, FALSE, 10);
 
 # Add canvas for vizualization plugin

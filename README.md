@@ -1,7 +1,7 @@
 # radiocroco
-Simple GUI to listen to Radio Croco, free radio from Rennes (France), broadcasted on https://pirenaica.fr
+Simple GUI to listen to Radio Klaxon, free radio from Notre-Dame-des-Landes (France), broadcasted on https://radio.antirep.net/RadioKlaxon
 
-No need to launch a browser to simply listen to Radio Croco, just launch 'radiocroco' to open up a simple dialog window with Play/Stop button and a fancy visualization window displaying psychedelic drawings in reaction to music (based on goom).
+No need to launch a browser to simply listen to Radio Klaxon, just launch 'radioklaxon' to open up a simple dialog window with Play/Stop button and a fancy visualization window displaying psychedelic drawings in reaction to music (based on goom).
 
 Dependencies:
 * perl
