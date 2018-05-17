@@ -47,7 +47,21 @@ foreach my $name ('', (
 GStreamerKlaxon::init([ $0, @ARGV ]);
 
 # Global variables
-my $stream_url = 'http://radio.grenoble.indymedia.org:8000/RadioKlaxon2';
+my $stream_url = 'https://streaming.parleur.net/RadioKlaxonxon';
+
+# Playlist from https://zad.nadir.org/IMG/m3u/radio_klaxon.m3u';
+#my $stream_url = 'https://streaming.parleur.net/RadioKlaxonxon';
+#my $stream_url = 'http://streaming.domainepublic.net:8000/RadioKlaxon2';
+#my $stream_url = 'https://klaxon.0id.org:8443/RadioKlaxon';
+#my $stream_url = 'https://stream.cyberguerrilla.org/RadioKlaxon';
+#my $stream_url = 'https://klaxon.alsimon.net/RadioKlaxon';
+#my $stream_url = 'http://198.252.153.230:8000/RadioKlaxon';
+#my $stream_url = 'http://95.130.15.149:8000/RadioKlaxon';
+#my $stream_url = 'https://radio.grenoble.indymedia.org/RadioKlaxon2';
+#my $stream_url = 'https://pirenaica.fr/stream.ogg';
+
+# Old streams
+#my $stream_url = 'http://radio.grenoble.indymedia.org:8000/RadioKlaxon2';
 #my $stream_url = 'https://radioklaxon.antirep.net';
 #my $stream_url = 'https://radio.antirep.net/RadioKlaxon';
 #my $stream_url = 'https://pirenaica.fr/stream.ogg';
